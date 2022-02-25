@@ -5,8 +5,8 @@
 
 
 CREATE TABLE account (
-    pubkey BYTEA PRIMARY KEY,
-    owner BYTEA,
+    pubkey TEXT PRIMARY KEY,
+    owner TEXT,
     lamports BIGINT NOT NULL,
     slot BIGINT NOT NULL,
     executable BOOL NOT NULL,
@@ -29,8 +29,8 @@ CREATE TABLE slot (
  */
 -- The table storing historical data for accounts
 CREATE TABLE account_audit (
-    pubkey BYTEA,
-    owner BYTEA,
+    pubkey TEXT,
+    owner TEXT,
     lamports BIGINT NOT NULL,
     slot BIGINT NOT NULL,
     executable BOOL NOT NULL,
