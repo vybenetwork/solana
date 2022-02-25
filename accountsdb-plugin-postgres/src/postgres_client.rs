@@ -59,9 +59,9 @@ impl Eq for DbAccountInfo {}
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct DbAccountInfo {
-    pub pubkey: Vec<u8>,
+    pub pubkey: String,
     pub lamports: i64,
-    pub owner: Vec<u8>,
+    pub owner: String,
     pub executable: bool,
     pub rent_epoch: i64,
     pub data: Vec<u8>,
@@ -86,9 +86,9 @@ impl DbAccountInfo {
     fn new<T: ReadableAccountInfo>(account: &T, slot: u64) -> DbAccountInfo {
         let data = account.data().to_vec();
         Self {
-            pubkey: account.pubkey().to_vec(),
+            pubkey: account.pubkey().to_string(),
             lamports: account.lamports() as i64,
-            owner: account.owner().to_vec(),
+            owner: account.owner().to_string(),
             executable: account.executable(),
             rent_epoch: account.rent_epoch() as i64,
             data,
@@ -99,8 +99,8 @@ impl DbAccountInfo {
 }
 
 pub trait ReadableAccountInfo: Sized {
-    fn pubkey(&self) -> &[u8];
-    fn owner(&self) -> &[u8];
+    fn pubkey(&self) -> String;
+    fn owner(&self) -> String;
     fn lamports(&self) -> i64;
     fn executable(&self) -> bool;
     fn rent_epoch(&self) -> i64;
@@ -109,12 +109,12 @@ pub trait ReadableAccountInfo: Sized {
 }
 
 impl ReadableAccountInfo for DbAccountInfo {
-    fn pubkey(&self) -> &[u8] {
-        &self.pubkey
+    fn pubkey(&self) -> String {
+        self.pubkey.to_string()
     }
 
-    fn owner(&self) -> &[u8] {
-        &self.owner
+    fn owner(&self) -> String {
+        self.owner.to_string()
     }
 
     fn lamports(&self) -> i64 {
@@ -139,12 +139,12 @@ impl ReadableAccountInfo for DbAccountInfo {
 }
 
 impl<'a> ReadableAccountInfo for ReplicaAccountInfo<'a> {
-    fn pubkey(&self) -> &[u8] {
-        self.pubkey
+    fn pubkey(&self) -> String {
+        bs58::encode(&self.pubkey).into_string()
     }
 
-    fn owner(&self) -> &[u8] {
-        self.owner
+    fn owner(&self) -> String {
+        bs58::encode(self.owner).into_string()
     }
 
     fn lamports(&self) -> i64 {
